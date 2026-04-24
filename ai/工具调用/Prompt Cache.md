@@ -13,6 +13,8 @@
 
 如果这些内容在连续请求之间**保持足够稳定**，服务端就不必每次都重新处理整段前缀，而可以直接复用之前的缓存结果。
 
+从“模型底层视角”看，真正有价值的不是缓存字符串本身，而是缓存 Transformer 在 prefill 阶段算出来的 KV Cache，也就是每层 attention 的 key/value 中间状态。OpenAI 文档也提到，扩展缓存会持久化 key/value tensors，而不是持久化原始 prompt 文本。
+
 从代码实现看，Claude Code 不只是“使用”这个能力，它还专门围绕它做了大量“**缓存稳定性工程**”，例如：
 
 - 保持 system prompt 分段稳定
